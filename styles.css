@@ -1,0 +1,295 @@
+body {
+    /* The css !important rule overrides bootstrap defaults */
+    background-color: rgb(241, 237, 237) !important;
+}
+
+.navbar {
+    margin-left: 5%;
+    width: 90%;
+    background-color: white;
+    text-align: center;
+    border: 3px solid rgb(18, 18, 18) !important;
+}
+
+.navbar-nav {
+    font-family: Poppins, sans-serif;
+    color: rgb(50, 50, 50) !important;
+    font-weight: 600;
+}
+
+.navbar-nav li {
+    /* margin-left: 10%; */
+    width: 200px;
+}
+
+.dropdown-menu {
+    text-align: center !important;
+}
+
+#main-content {
+    margin: 2% 5%;
+    width: 90%;
+    height: auto;
+    min-height: 550px;
+    align-items: center !important;
+    text-align: center;
+    padding: 2% 2%;
+
+    font-family: Helvetica, sans-serif;
+    background-color: white;
+}
+
+.multiple-col-table {
+    width: 100%;
+    border: 1px solid rgb(50, 50, 50);
+    border-collapse: collapse;
+}
+
+.few-col-table {
+    width: 60%;
+    border: 2px solid rgb(50, 50, 50);
+    border-collapse: collapse;
+    background-color: #D6EEEE;
+    font-weight: 600;
+    margin-left: 20%;
+}
+
+th,
+td {
+    padding: 5px;
+    border: 1px solid rgb(50, 50, 50);
+    font-size: 12px;
+}
+
+.multiple-col-table tr:nth-child(even) {
+    background-color: #D6EEEE;
+}
+
+.multiple-col-table th {
+    background-color: #D6EEEE;
+}
+
+.right-aligned-cell {
+    text-align: right;
+}
+
+.sidepanel {
+    background-color: rgb(208, 249, 224);
+    height: 75%;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
+    text-align: left;
+    padding: 2%;
+    border: 1px dotted rgb(50, 50, 50);
+}
+
+#panel-div img {
+    width: 50%;
+    height: auto;
+    margin-top: 10%;
+    margin-left: 25%;
+}
+
+.closing-panel-x {
+    color: white;
+    font-weight: 900;
+    float: right;
+    font-size: 48px;
+    line-height: 24px;
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+.customer-orders-btn {
+    padding-top: 2%;
+    padding-bottom: 0;
+    font-size: 12px;
+    font-weight: 800;
+    width: 80%;
+}
+
+footer {
+    font-family: Poppins, sans-serif;
+    background-color: white;
+    margin-left: 5%;
+    padding-top: 1%;
+    padding-bottom: 0;
+    width: 90%;
+    text-align: center;
+    border: 3px solid rgb(18, 18, 18) !important;
+}
+
+footer p {
+    font-size: 12px;
+    margin-bottom: 1%;
+}
+
+#contact-footer #pic-reference {
+    font-size: 10px;
+    margin-bottom: 1%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgb(241, 237, 237) !important;
+}
+
+
+
+
+
+
+/* Following the Bootstrap 5 breakpoints: 
+https://getbootstrap.com/docs/5.0/layout/breakpoints/ */
+@media screen and (max-width: 992px) {
+
+    /* Lift up nav-link area when vertical nav-items/small screen */
+    .navbar-nav {
+        margin: -25px auto;
+    }
+
+    /* SInce navbar-nav overlaying navbar-toggler (hamburger), make it on above */
+    .navbar-toggler {
+        z-index: 1;
+    }
+
+    /* Recenter/auto left/right the dropdown items, when vertical in small screen  */
+    .navbar-nav li {
+        padding: 0% auto;
+        margin: -5px auto;
+        font-size: 12px;
+
+    }
+
+    #main-content {
+        /* margin-top: 0;
+        margin-left: 0; */
+        /* width: 100%; */
+        padding: 2% 2%;
+    }
+
+    .multiple-col-table {
+        width: 100% !important;
+        border: 1px solid rgb(50, 50, 50);
+    }
+
+    th,
+    td {
+        padding: 1px;
+        font-size: 10px;
+        border: 1px solid rgb(50, 50, 50);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .customer-orders-btn {
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+}
+
+
+@media screen and (max-width: 576px) {
+
+    .navbar {
+        margin-left: 0;
+        width: 100%;
+        background-color: white;
+        text-align: center;
+        border: 2px solid rgb(18, 18, 18) !important;
+    }
+
+    /* Hide our brand name at the top left */
+    .navbar-brand {
+        /* display: none; */
+        visibility: hidden;
+    }
+
+    /* Lift up nav-link area when vertical nav-items/small screen */
+    .navbar-nav {
+        margin: -25px auto;
+        text-align: left;
+    }
+
+    /* SInce navbar-nav overlaying navbar-toggler (hamburger), make it on above */
+    .navbar-toggler {
+        z-index: 1;
+        font-size: 12px;
+    }
+
+    /* Recenter/auto left/right the dropdown items, when vertical in small screen  */
+    .navbar-nav li {
+        padding: 0% auto;
+        margin: -5px auto;
+        font-size: 10px;
+    }
+
+    .dropdown-menu {
+        text-align: left !important;
+        width: 50%;
+        margin-left: -10px;
+        padding: 1% 0;
+        border-style: none;
+    }
+
+    #main-content {
+        /* margin-top: 0; */
+        margin: 0;
+        width: 100%;
+        /* padding: 2% 2%; */
+    }
+
+    .multiple-col-table {
+        width: 100% !important;
+        border: 0.5px solid rgb(50, 50, 50);
+        margin-left: 0;
+    }
+
+    th,
+    td {
+        padding: 1px;
+        font-size: 8px;
+        border: 1px solid rgb(50, 50, 50);
+    }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+    footer {
+        margin-left: 0;
+        width: 100%;
+        font-size: 12px;
+    }
+
+}
