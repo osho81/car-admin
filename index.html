@@ -27,9 +27,21 @@
     <!-- External add of css (place here or above bootstrap, depending on priority) -->
     <link rel="stylesheet" href="styles.css">
 
+    <!-- Keycloak js adapter initialization -->
+    <script>
+        let keycloak = new Keycloak({ url: "http://localhost:8080", realm: 'car-rental-realm', clientId: 'car-rental-v2' });
+        function initKeycloak() {
+            return keycloak.init({ onLoad: 'login-required' })
+        }
+        $(function () {
+            loadHomeContent();
+        });
+
+    </script>
+
 </head>
 
-<body>
+<body onload="initKeycloak()">
 
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
@@ -70,16 +82,6 @@
                             <li><a id="bus-nav" class="dropdown-item" href="#">Bus</a></li>
                         </ul>
                     </li>
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Cars
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a id="view-cars-nav" class="dropdown-item" href="#">View Cars</a></li>
-                            <li><a id="add-car-nav" class="dropdown-item" href="#">Add Car</a></li>
-                        </ul>
-                    </li> -->
                     <li class="nav-item">
                         <a id="add-car-nav" class="nav-link" href="#">Add Car</a>
                     </li>
