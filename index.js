@@ -14,7 +14,7 @@ keycloak.onTokenExpired = () => {
 $(document).ready(function () {
     // Add eventlistener for nav-sections navs (jQuery)
     $("#welcome-nav").on("click", function () { loadHomeContent() });
-    $("#customers-nav").on("click", function () { loadAllCustomers() });
+    $("#admin-info-nav").on("click", function () { loadAdminInfo() });
     $("#logout-btn").on("click", function () { signout() });
 
     $("#all-cars-nav").on("click", function () { loadAllCars() });
@@ -26,6 +26,7 @@ $(document).ready(function () {
     $("#bus-nav").on("click", function () { loadCarsByType("bus") });
 
     $("#add-car-nav").on("click", function () { addCar() })
+    $("#customers-nav").on("click", function () { loadAllCustomers() });
 
     // Add eventlistener for update car btn
     $(document).on("click", ".update-car-btn", function () {
@@ -42,22 +43,8 @@ $(document).ready(function () {
         let carId = btn.id.slice(3); // remove "car" from id
         let carIdNum = Number(carId); // Cast to number/int
 
-        // If car exist in any order
-        checkIfCarIsInOrders(carIdNum);
-
-
-        // Delete warning message
-        // $("#main-content").append('<div id="danger-div" class="danger"></div>');
-        // $("#danger-div").html(
-        //     '<div class="alert danger"><strong>WARNING</strong>' +
-        //     ' You are about to delete car with id ' + carIdNum + '.<br>Confirm or cancel in the confirmation box.</div>'
-        // );
-
-        // Give warning message time to load, before calling deleteCar() where a confirmation box is displayed
-        // var millisecondsToWait = 500;
-        // setTimeout(function () {
-        //     deleteCar(carIdNum);
-        // }, millisecondsToWait);
+        // Check conditions for deletion of car and possibla relacement of car for pertinent orders
+        prepareDeleteCar(carIdNum); 
 
     });
 
@@ -106,7 +93,7 @@ $(document).ready(function () {
             '</th></tr></thead>';
 
         // Create rest of the parts
-        const tableHeader = '<h3>List of cars to rent</h3><br>';
+        const tableHeader = '<h3>List of Customers</h3><br>';
         const tableBottom = '</table>';
 
         // Use the created table parts as args in jquery/ajax .html() method
@@ -147,7 +134,7 @@ $(document).ready(function () {
             '</th><th class="sortByAddress sortFromA">Address <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortByNumOfOrders sortByAsc">Orders <i class="fa-solid fa-sort-down"></i>' +
             '</th></tr></thead>';
-        const tableHeader = '<h3>List of cars to rent</h3><br>';
+        const tableHeader = '<h3>List of Customers</h3><br>';
         const tableBottom = '</table>';
         $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
     });
@@ -177,7 +164,7 @@ $(document).ready(function () {
         }
         const tableTop = '<table class="multiple-col-table" id="customersTable">';
         const tableHead = '<thead><tr><th class="sortById sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
-            '</th><th class="SortBySsn sortByAsc">SSN <i class="fa-solid fa-sort-down"></i>' +
+            '</th><th class="sortBySsn sortByAsc">SSN <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="' + currentSortClass + '">Date of Birth <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
             '</th><th class="sortByEmail sortFromA">Email <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortByFirstName sortFromA">First Name <i class="fa-solid fa-sort-down"></i>' +
@@ -185,7 +172,7 @@ $(document).ready(function () {
             '</th><th class="sortByAddress sortFromA">Address <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortByNumOfOrders sortByAsc">Orders <i class="fa-solid fa-sort-down"></i>' +
             '</th></tr></thead>';
-        const tableHeader = '<h3>List of cars to rent</h3><br>';
+        const tableHeader = '<h3>List of Customers</h3><br>';
         const tableBottom = '</table>';
         $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
     });
@@ -223,7 +210,7 @@ $(document).ready(function () {
             '</th><th class="sortByAddress sortFromA">Address <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="' + currentSortClass + '">Orders <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
             '</th></tr></thead>';
-        const tableHeader = '<h3>List of cars to rent</h3><br>';
+        const tableHeader = '<h3>List of Customers</h3><br>';
         const tableBottom = '</table>';
         $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
     });
@@ -273,7 +260,7 @@ $(document).ready(function () {
             '</th></tr></thead>';
 
         // Create rest of the parts
-        const tableHeader = '<h3>List of cars to rent</h3><br>';
+        const tableHeader = '<h3>List of Customers</h3><br>';
         const tableBottom = '</table>';
 
         // Use the created table parts as args in jquery/ajax .html() method
@@ -313,7 +300,7 @@ $(document).ready(function () {
             '</th><th class="sortByAddress sortFromA">Address <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortByNumOfOrders sortByAsc">Orders <i class="fa-solid fa-sort-down"></i>' +
             '</th></tr></thead>';
-        const tableHeader = '<h3>List of cars to rent</h3><br>';
+        const tableHeader = '<h3>List of Customers</h3><br>';
         const tableBottom = '</table>';
         $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
     });
@@ -351,7 +338,7 @@ $(document).ready(function () {
             '</th><th class="sortByAddress sortFromA">Address <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortByNumOfOrders sortByAsc">Orders <i class="fa-solid fa-sort-down"></i>' +
             '</th></tr></thead>';
-        const tableHeader = '<h3>List of cars to rent</h3><br>';
+        const tableHeader = '<h3>List of Customers</h3><br>';
         const tableBottom = '</table>';
         $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
     });
@@ -389,7 +376,7 @@ $(document).ready(function () {
             '</th><th class="' + currentSortClass + '">Address <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
             '</th><th class="sortByNumOfOrders sortByAsc">Orders <i class="fa-solid fa-sort-down"></i>' +
             '</th></tr></thead>';
-        const tableHeader = '<h3>List of cars to rent</h3><br>';
+        const tableHeader = '<h3>List of Customers</h3><br>';
         const tableBottom = '</table>';
         $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
     });
@@ -424,7 +411,7 @@ $(document).ready(function () {
         const tableHead = '<thead><tr><th class="' + currentSortClass + '"># <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
             '</th><th class="sortByAlphabet sortFromA">Reg. Nr <i class="fa-solid fa-sort-down"></i></th><th>Model</th><th>Type' +
             '</th><th>Model Year</th><th>SEK/day</th><th>Actions</th></tr></thead>';
-        const tableHeader = '<h3>List of cars to rent</h3><br>';
+        const tableHeader = '<h3>List of Cars</h3><br>';
         const tableBottom = '</table>';
         $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
     });
@@ -458,7 +445,7 @@ $(document).ready(function () {
         const tableHead = '<thead><tr><th class="sortByNumber sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="' + currentSortClass + '">Reg. Nr <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
             '</th><th>Model</th><th>Type</th><th>Model Year</th><th>SEK/day</th><th>Actions</th></tr></thead>';
-        const tableHeader = '<h3>List of cars to rent</h3><br>';
+        const tableHeader = '<h3>List of Cars</h3><br>';
         const tableBottom = '</table>';
         $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
     });
@@ -525,14 +512,7 @@ $(document).ready(function () {
 
 
 
-});
-
-
-
-
-
-
-
+}); ////------------- End of Document On Ready Part ----------------////
 
 
 /////--------- HOME, ADMIN INFO, LOGOUT fucntions ------------/////
@@ -573,6 +553,23 @@ function loadHomeContent() {
         '</button>' +
         '</div>'
     );
+}
+
+function loadAdminInfo() {
+    $("#main-content").html(
+        // Header
+        '<h3>Signed in admin info</h3><be><br>' +
+        // Content in table rows 
+        '<table class="few-col-table">' +
+        '<tr><td>Admin username: </td><td>' + keycloak.tokenParsed.preferred_username + '</td></tr>' +
+        '<tr><td>Admin email: </td><td>' + keycloak.tokenParsed.email + '</td></tr>' +
+        '<tr><td>First name: </td><td>' +
+        (keycloak.tokenParsed.given_name == "" ? "No registered name" :
+            keycloak.tokenParsed.given_name) + '</td></tr>' +
+        '<tr><td>Last name: </td><td>' +
+        (keycloak.tokenParsed.family_name == "" ? "No registered name" :
+            keycloak.tokenParsed.family_name) + '</td></tr>' +
+        '</td></tr></table>');
 }
 
 
@@ -621,15 +618,15 @@ const loadAllCustomers = async () => {
         '</th><th class="sortByDob sortByAsc">Date of Birth <i class="fa-solid fa-sort-down"></i>' +
         '</th><th class="sortByEmail sortFromA">Email <i class="fa-solid fa-sort-down"></i>' +
         '</th><th class="sortByFirstName sortFromA">First Name <i class="fa-solid fa-sort-down"></i>' +
-        '</th><th class="sortByLasttName sortFromA">Last Name <i class="fa-solid fa-sort-down"></i>' +
+        '</th><th class="sortByLastName sortFromA">Last Name <i class="fa-solid fa-sort-down"></i>' +
         '</th><th class="sortByAddress sortFromA">Address <i class="fa-solid fa-sort-down"></i>' +
 
         // Add a column for number of orders by customer
         '</th><th class="sortByNumOfOrders sortByAsc">Orders <i class="fa-solid fa-sort-down"></i>' +
         '</th></tr></thead>';
 
-    // Create rest of the parts
-    const tableHeader = '<h3>List of cars to rent</h3><br>';
+    // Create rest of the partsss
+    const tableHeader = '<h3>List of Customers</h3><br>';
     const tableBottom = '</table>';
 
     // Use the created table parts as args in jquery/ajax .html() method
@@ -670,7 +667,7 @@ const loadAllCars = async () => {
         '</th><th>Model Year</th><th>SEK/day</th><th>Actions</th></tr></thead>';
 
     // Create rest of the parts
-    const tableHeader = '<h3>List of cars to rent</h3><br>';
+    const tableHeader = '<h3>List of Cars</h3><br>';
     const tableBottom = '</table>';
 
     // Use the created table parts as args in jquery/ajax .html() method
@@ -707,7 +704,7 @@ const loadCarsByType = async (type) => {
     // Remove sorting fucntions, since this is a filtering; for sorting see list of all cars
     const tableHead = '<thead><tr><th>#</th><th>Reg. Nr</th><th>Model</th><th>Type' +
         '</th><th>Model Year</th><th>SEK/day</th><th>Actions</th></tr></thead>';
-    const tableHeader = '<h3>List of cars to rent</h3><br>';
+    const tableHeader = '<h3>List of Cars</h3><br>';
     const tableBottom = '</table>';
 
     $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
@@ -895,16 +892,132 @@ const updateCar = async (carIdNum) => {
     });
 }
 
+// Function for checking if car to be deleted is in actual orders
+const prepareDeleteCar = async (carIdNum) => {
 
+    // Get cars list and find out current car by matching its id with carId in order
+    const cars = await getCarsList();
+    for (var i = 0; i < cars.length; i++) {
+        var carToBeDeleted;
+        if (cars[i].id == carIdNum) {
+            carToBeDeleted = cars[i];
+        }
+    }
+    console.log("Car id-arg " + carIdNum);
+    console.log("Car id " + carToBeDeleted.id);
 
-// Get all cars from backend and RETURN results
+    // FInd a substitute car with same type
+    const carsByThisType = await getCarsByType(carToBeDeleted.type.toUpperCase());
+
+    // Exclude car being deleted, to not re-assign it to orders
+    const otherCarsByThisType = carsByThisType.filter(car => car.id != carToBeDeleted.id);
+
+    const orders = await getOrdersList(); // Get orders to loop through
+
+    const urlPath = "/updateorder";
+    if (otherCarsByThisType.length > 0) { // If at least 1 substitute car is found
+
+        // Loop through orders and assign/update with substitute car id
+        for (var i = 0; i < orders.length; i++) {
+
+            // Create comparison dates to check if order is curent
+            let currentOrderEnd = new Date(orders[i].lastRentalDay);
+            let today = new Date();
+            today.setDate(today.getDate() - 1);
+
+            // If match, replace car in CURRENT with the found substitute car
+            // (If canceled or passed, just set car to zero)
+            if (orders[i].carId == carToBeDeleted.id && orders[i].canceled == false &&
+                currentOrderEnd > today) {
+                // Assign first found substitute in sub-method
+                const options = {
+                    method: "PUT",
+                    headers: {
+                        Authorization: 'Bearer ' + keycloak.token,
+                        Accept: "application/json",
+                        "Content-Type": "application/json;charset=UTF-8",
+                    },
+                    body: JSON.stringify({
+                        id: orders[i].id,
+                        orderNr: orders[i].orderNr,
+                        carId: otherCarsByThisType[0].id,
+                    }),
+                };
+                await fetch(apiBaseUrl + urlPath, options)
+                    .then((response) => response.json())
+                    .catch((error) => {
+                        console.log("Error: response not returned: ", error);
+                    });
+            }
+        }
+
+        // Delete warning message
+        $("#main-content").append('<div id="danger-div" class="alert danger"></div>');
+        $("#danger-div").html(
+            '<strong>WARNING:<br></strong>' +
+            ' You are about to delete car ' + carToBeDeleted.regNr + ' with id ' + carIdNum + '.<br>' +
+            'Any order of this car will given a substitute car of same type.<br>' +
+            'Confirm or cancel in the confirmation box.<br>'
+        );
+
+        // Give warning message time to load, before calling deleteCar() where a confirmation box is displayed
+        var millisecondsToWait = 500;
+        setTimeout(function () {
+            deleteCar(carIdNum);
+        }, millisecondsToWait);
+
+    } else { // If NO substitute car of same type is found, cancel any order with deleted car
+        for (var i = 0; i < orders.length; i++) {
+
+            if (orders[i].carId == carToBeDeleted.id) {
+                // If substitute not found; cancel orders and fix it in other manner
+                const options = {
+                    method: "PUT",
+                    headers: {
+                        Authorization: 'Bearer ' + keycloak.token,
+                        Accept: "application/json",
+                        "Content-Type": "application/json;charset=UTF-8",
+                    },
+                    body: JSON.stringify({
+                        id: orders[i].id,
+                        orderNr: orders[i].orderNr,
+                        canceled: true, // CAncel, since carId will be zero
+                    }),
+                };
+                await fetch(apiBaseUrl + urlPath, options)
+                    .then((response) => response.json())
+                    .catch((error) => {
+                        console.log("Error: response not returned: ", error);
+                    });
+            }
+        }
+
+        // Delete warning message
+        $("#main-content").append('<div id="danger-div" class="alert danger"></div>');
+        $("#danger-div").html(
+            '<strong>WARNING:<br></strong>' +
+            ' You are about to delete car ' + carToBeDeleted.regNr + ' with id ' + carIdNum + '.<br>' +
+            'There are no substitute cars of same type. If you proceed, any order of this car will be canceled.<br>' +
+            'Confirm or cancel in the confirmation box.<br>'
+        );
+
+        // Give warning message time to load, before calling deleteCar() where a confirmation box is displayed
+        var millisecondsToWait = 500;
+        setTimeout(function () {
+            deleteCar(carIdNum);
+        }, millisecondsToWait);
+    }
+
+}
+
+// Delete car after handled current orders etc 
 const deleteCar = async (carIdNum) => {
-    var conf = confirm("WARNING You are about to delete car with id " + carIdNum + ". Please confirm or cancel.");
+    var conf = confirm("WARNING: Confirm deletion of car with id " + carIdNum + "?");
+
     if (conf == false) {
         loadAllCars(); // If cancels: abort by reloading car list view
 
-    } else {
-
+    } else { // If accept
         const urlPath = "/deletecar";
         const options = {
             method: "DELETE",
@@ -930,66 +1043,6 @@ const deleteCar = async (carIdNum) => {
         loadAllCars(); // Reload page view
     }
 }
-
-const checkIfCarIsInOrders = async (carIdNum) => {
-
-    // Get cars list and find out current car by matching its id with carId in order
-    const cars = await getCarsList();
-    for (var i = 0; i < cars.length; i++) {
-        var currentCar;
-        if (cars[i].id == carIdNum) {
-            currentCar = cars[i];
-        }
-    }
-
-    const carsByThisType = await getCarsByType(currentCar.type.toUpperCase());
-    console.log(carsByThisType.length);
-
-    var sameTypeButNotThisCar = [];
-    if (carsByThisType.length > 1) {
-        // Use this list of cars with same type, to assign new car
-        sameTypeButNotThisCar = carsByThisType.filter(car => car.id != carIdNum);
-    } else {
-        alert("No other car of same type, Not allowed to delete. Car found in: ");
-    }
-
-
-    var ordersWithThisCar = [];
-
-    for (var i = 0; i < cars.length - 1; i++) {
-        var tempCar = cars[i];
-        console.log(cars[i].regNr);
-
-        // var tempArray = tempCar.ordersOfCar.filter(order => order.carId != currentCar.id);
-
-        // console.log(tempArray.length);
-
-        // ordersWithThisCar.push(tempArray);
-
-        for (var j = 0; j < currentCar.ordersOfCar.length; i++) {
-            // console.log(currentCar.ordersOfCar[j].orderNr);
-            // ordersWithThisCar.push(currentCar.ordersOfCar[j].orderNr);
-            // var tempArray = [];
-            if (currentCar.ordersOfCar[j].carId == currentCar.id) {
-                console.log(currentCar.ordersOfCar[j].carId);
-                ordersWithThisCar.push(currentCar.ordersOfCar[j]);
-                // updateCarIdForOrder(currentCar.ordersOfCar[j].orderNr, carIdNum);
-            } else {
-                console.log("Nooo");
-                break;
-            }
-        }
-    }
-
-    console.log(ordersWithThisCar.length);
-
-    for (var i = 0; i < ordersWithThisCar.length; i++) {
-        console.log(ordersWithThisCar[i].orderNr);
-    }
-
-}
-
-
 
 
 
@@ -1053,12 +1106,32 @@ const getCarsByType = async (type) => {
         if (allCars[i].type.toUpperCase() == type) {
             const tempCar = allCars[i];
             cars.push(tempCar);
-            console.log(cars[0]);
-            // return cars;
         }
     }
-    // console.log(cars[0]);
     return cars;
+}
+
+// Get all orders from backend and RETURN result
+const getOrdersList = async () => {
+    const urlPath = "/orders";
+    const options = {
+        method: "GET",
+        headers: {
+            Authorization: 'Bearer ' + keycloak.token,
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+        }
+    };
+    await fetch(apiBaseUrl + urlPath, options)
+        .then((response) => response.json()) // Promise
+        .then((data) => {
+            orders = data;
+
+        }).catch((error) => {
+            console.log("Error: response not returned: ", error);
+        });
+
+    return orders;
 }
 
 
