@@ -44,10 +44,56 @@ $(document).ready(function () {
         let carIdNum = Number(carId); // Cast to number/int
 
         // Check conditions for deletion of car and possibla relacement of car for pertinent orders
-        prepareDeleteCar(carIdNum); 
+        prepareDeleteCar(carIdNum);
 
     });
 
+    // Add eventlistener for cancel order btn
+    $(document).on("click", ".cancel-order-btn", function () {
+        var btn = this; // Extract id
+        let orderId = btn.id.slice(5); // remove "car" from id
+        let orderIdNum = Number(orderId); // Cast to number/int
+
+        cancelOrder(orderIdNum);
+    });
+
+    // Add eventlistener for un-cancel order btn
+    $(document).on("click", ".uncancel-order-btn", function () {
+        var btn = this; // Extract id
+        let orderId = btn.id.slice(5); // remove "car" from id
+        let orderIdNum = Number(orderId); // Cast to number/int
+
+        uncancelOrder(orderIdNum);
+    });
+
+    // Add eventlistener + function for expanding columns for customers view
+    $(document).on("click", ".maximize-customer-btn", function () {
+        // Change class to use pertinent css styles
+        // $("#customersTable").removeAttr('class');
+        // $("#customersTable").attr('class', 'customers-table-maxi').attr('class', 'multiple-col-table'); 
+        // Change button properties to prepare for enable click function
+        // $("#expand-btn-id").removeAttr('class', 'maximize-customer-btn'); 
+        // $("#expand-btn-id").attr('class','minimize-customer-btn ').attr('class', 'functional-btn');
+        $("#customersTable").removeClass();
+        $("#customersTable").addClass("customers-table-maxi multiple-col-table"); // Replace pertinent classes
+        $("#expand-btn-id").removeClass();
+        $("#expand-btn-id").addClass("minimize-customer-btn functional-btn"); // Replace pertinent classes
+        $("#expand-btn-id").html('<i class="fa-solid fa-minimize"></i>'); // Change btn icon
+    });
+
+    // For mimnimizing customers table, do opposite code of maximizing function above
+    $(document).on("click", ".minimize-customer-btn", function () {
+        // console.log("hiii");
+        // $("#customersTable").removeAttr('class'); 
+        // $("#customersTable").attr('class', 'customers-table-mini').attr('class', 'multiple-col-table'); 
+        // $("#expand-btn-id").removeAttr('class', 'minimize-customer-btn').attr('class', 'multiple-col-table'); 
+        // $("#expand-btn-id").attr('class', 'functional-btn').attr('class', 'maximize-customer-btn');
+        $("#customersTable").removeClass();
+        $("#customersTable").addClass("customers-table-mini multiple-col-table");
+        $("#expand-btn-id").removeClass();
+        $("#expand-btn-id").addClass("maximize-customer-btn functional-btn");
+        $("#expand-btn-id").html('<i class="fa-solid fa-maximize"></i>');
+    });
 
     ////------------------------- SORTING FUNCTIONS BY NUMBER --------------------------////
     // Sorting custoemr by id, ssn, date of birth; both event and definition are here
@@ -79,7 +125,11 @@ $(document).ready(function () {
         }
 
         // Assign table class in alignment with the coorporation styleguide
-        const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        // const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
+            "customers-table-maxi";
+        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
 
         // Create first table row; also add "btns" for sorting
         const tableHead = '<thead><tr><th class="' + currentSortClass + '"># <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
@@ -124,7 +174,12 @@ $(document).ready(function () {
                 '<button class="customer-orders-btn btn btn-outline-success" id="customer' + customers[i].id + '">' +
                 customers[i].ordersByCustomer.length + '</td></tr>';
         }
-        const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        // const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
+            "customers-table-maxi";
+        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
         const tableHead = '<thead><tr><th class="sortById sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="' + currentSortClass + '">SSN <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
             '</th><th class="sortByDob sortByAsc">Date of Birth <i class="fa-solid fa-sort-down"></i>' +
@@ -162,7 +217,12 @@ $(document).ready(function () {
                 '<button class="customer-orders-btn btn btn-outline-success" id="customer' + customers[i].id + '">' +
                 customers[i].ordersByCustomer.length + '</td></tr>';
         }
-        const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        // const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
+            "customers-table-maxi";
+        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
         const tableHead = '<thead><tr><th class="sortById sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortBySsn sortByAsc">SSN <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="' + currentSortClass + '">Date of Birth <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
@@ -200,7 +260,12 @@ $(document).ready(function () {
                 '<button class="customer-orders-btn btn btn-outline-success" id="customer' + customers[i].id + '">' +
                 customers[i].ordersByCustomer.length + '</td></tr>';
         }
-        const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        // const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
+            "customers-table-maxi";
+        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
         const tableHead = '<thead><tr><th class="sortById sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="SortBySsn sortByAsc">SSN <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortByDob sortByAsc">Date of Birth <i class="fa-solid fa-sort-down"></i>' +
@@ -246,7 +311,11 @@ $(document).ready(function () {
         }
 
         // Assign table class in alignment with the coorporation styleguide
-        const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        // const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
+            "customers-table-maxi";
+        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
 
         // Create first table row; also add "btns" for sorting
         const tableHead = '<thead><tr><th class="sortById sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
@@ -290,7 +359,12 @@ $(document).ready(function () {
                 '<button class="customer-orders-btn btn btn-outline-success" id="customer' + customers[i].id + '">' +
                 customers[i].ordersByCustomer.length + '</td></tr>';
         }
-        const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        // const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
+            "customers-table-maxi";
+        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
         const tableHead = '<thead><tr><th class="sortById sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortBySsn sortByAsc">SSN <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortByDob sortByAsc">Date of Birth <i class="fa-solid fa-sort-down"></i>' +
@@ -328,7 +402,12 @@ $(document).ready(function () {
                 '<button class="customer-orders-btn btn btn-outline-success" id="customer' + customers[i].id + '">' +
                 customers[i].ordersByCustomer.length + '</td></tr>';
         }
-        const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        // const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
+            "customers-table-maxi";
+        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
         const tableHead = '<thead><tr><th class="sortById sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortBySsn sortByAsc">SSN <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortByDob sortByAsc">Date of Birth <i class="fa-solid fa-sort-down"></i>' +
@@ -366,7 +445,12 @@ $(document).ready(function () {
                 '<button class="customer-orders-btn btn btn-outline-success" id="customer' + customers[i].id + '">' +
                 customers[i].ordersByCustomer.length + '</td></tr>';
         }
-        const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        // const tableTop = '<table class="multiple-col-table" id="customersTable">';
+        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
+            "customers-table-maxi";
+        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
         const tableHead = '<thead><tr><th class="sortById sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortBySsn sortByAsc">SSN <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="sortByDob sortByAsc">Date of Birth <i class="fa-solid fa-sort-down"></i>' +
@@ -407,7 +491,12 @@ $(document).ready(function () {
                 '<button class="negative-btn delete-car-btn" id="car' + cars[i].id +
                 '">Delete</button>' + '</td></tr>';
         }
-        const tableTop = '<table class="multiple-col-table" id="carsTable">';
+        // const tableTop = '<table class="multiple-col-table" id="carsTable">';
+        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
+            "customers-table-maxi";
+        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
         const tableHead = '<thead><tr><th class="' + currentSortClass + '"># <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
             '</th><th class="sortByAlphabet sortFromA">Reg. Nr <i class="fa-solid fa-sort-down"></i></th><th>Model</th><th>Type' +
             '</th><th>Model Year</th><th>SEK/day</th><th>Actions</th></tr></thead>';
@@ -441,7 +530,12 @@ $(document).ready(function () {
                 '<button class="negative-btn delete-car-btn" id="car' + cars[i].id +
                 '">Delete</button>' + '</td></tr>';
         }
-        const tableTop = '<table class="multiple-col-table" id="carsTable">';
+        // const tableTop = '<table class="multiple-col-table" id="carsTable">';
+        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
+            "customers-table-maxi";
+        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
         const tableHead = '<thead><tr><th class="sortByNumber sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="' + currentSortClass + '">Reg. Nr <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
             '</th><th>Model</th><th>Type</th><th>Model Year</th><th>SEK/day</th><th>Actions</th></tr></thead>';
@@ -450,9 +544,8 @@ $(document).ready(function () {
         $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
     });
 
-
-
     ////----------------- SIDE PANEL FOR ORDERS --------------------////
+
     // Add eventlistener + function for orders preview for admin after click on custoemr order column
     $(document).on("click", ".customer-orders-btn", async function () {
 
@@ -477,9 +570,9 @@ $(document).ready(function () {
             '<h6>Orders by ' + currentCustomer.fName + ' ' + currentCustomer.lName +
             ' with Ssn ' + currentCustomer.ssn + '</h6>';
 
-        const tableTop = '<table class="multiple-col-table" id="carsTable">';
+        const tableTop = '<table class="multiple-col-table" id="ordersTable">';
 
-        const tableHead = '<thead><tr><th>Order id </th><th>Order Nr</th>' +
+        const tableHead = '<thead><tr><th>Order id</th><th>Canceled</th><th>Order Nr</th>' +
             '<th>From</th><th>To</th><th>Car Id</th><th>Price</th></tr></thead>';
 
         const tableBottom = '</table>' +
@@ -489,9 +582,18 @@ $(document).ready(function () {
         let tableRows = '';
         for (var i = 0; i < currentCustomer.ordersByCustomer.length; i++) {
             tableRows += '<tr><td>' + currentCustomer.ordersByCustomer[i].id + '</td><td>' +
-                currentCustomer.ordersByCustomer[i].orderNr + '</td><td>' + currentCustomer.ordersByCustomer[i].firstRentalDay +
-                '</td><td>' + currentCustomer.ordersByCustomer[i].lastRentalDay + '</td><td>' + currentCustomer.ordersByCustomer[i].carId + '</td><td>' +
-                currentCustomer.ordersByCustomer[i].price + '</td></tr>';
+                // currentCustomer.ordersByCustomer[i].canceled + '</td><td>' +
+
+                // Add btn so admin can cancel an order
+                '<button class="cancel-order-btn btn btn-outline-success" id="order' + currentCustomer.ordersByCustomer[i].id + '">' +
+                (currentCustomer.ordersByCustomer[i].canceled ? "Uncancel" : "Cancel") +
+                '</button></td><td>' +
+
+                currentCustomer.ordersByCustomer[i].orderNr + '</td><td>' +
+                currentCustomer.ordersByCustomer[i].firstRentalDay + '</td><td>' +
+                currentCustomer.ordersByCustomer[i].lastRentalDay + '</td><td>' +
+                currentCustomer.ordersByCustomer[i].carId + '</td><td>' +
+                currentCustomer.ordersByCustomer[i].price + '</td></tr>'
         }
 
         $("#panel-div").html(panelHeader + tableTop + tableHead + tableRows + tableBottom);
@@ -508,9 +610,6 @@ $(document).ready(function () {
     $("#mail").on("click", function () {
         window.open('mailto:ossi.hour@gmail.com');
     });
-
-
-
 
 }); ////------------- End of Document On Ready Part ----------------////
 
@@ -578,20 +677,6 @@ function signout() {
     // keycloak.logout({"redirectUri":"http://localhost:8080/"}); // Back to keycloak admin console
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ////--------------- DISPLAY CUSTOMERS ------------------////
 
 const loadAllCustomers = async () => {
@@ -606,13 +691,20 @@ const loadAllCustomers = async () => {
             '</td><td>' +
             // Add btn soa dmin can preview orders
             '<button class="customer-orders-btn btn btn-outline-success" id="customer' + customers[i].id + '">' +
-            customers[i].ordersByCustomer.length + '</td></tr>';
+            customers[i].ordersByCustomer.length + '</button></td></tr>';
     }
 
-    // Assign table class in alignment with the coorporation styleguide
-    const tableTop = '<table class="multiple-col-table" id="customersTable">';
 
-    // Create first table row; also add "btns" for sorting
+    // Assign table class in alignment with the coorporation styleguide
+    const currentExpansion = $("#customersTable").hasClass("customers-table-maxi") ? "customers-table-" : // Opposite of sorting at start
+        "customers-table-mini";
+    const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
+        '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+    // const tableTop = '<table class="multiple-col-table customers-table-mini" id="customersTable"><br>' +
+    //     // Expand columns button
+    //     '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
+    // Create first table row; also add "btns" for sortingmaxi
     const tableHead = '<thead><tr><th class="sortById sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
         '</th><th class="sortBySsn sortByAsc">SSN <i class="fa-solid fa-sort-down"></i>' +
         '</th><th class="sortByDob sortByAsc">Date of Birth <i class="fa-solid fa-sort-down"></i>' +
@@ -632,12 +724,6 @@ const loadAllCustomers = async () => {
     // Use the created table parts as args in jquery/ajax .html() method
     $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
 }
-
-
-
-
-
-
 
 ////--------------- DISPLAY CARS ------------------////
 
@@ -710,10 +796,8 @@ const loadCarsByType = async (type) => {
     $("#main-content").html(tableHeader + tableTop + tableHead + tableRows + tableBottom);
 }
 
-
-
-
 ////--------------------------------- ADD CAR ------------------------------////
+
 // Display form for input, send input with POST fetch to backend rest api to create of a car record
 const addCar = async () => {
 
@@ -801,7 +885,8 @@ const addCar = async () => {
     });
 }
 
-// Update car fucntion
+////--------------------------------- UPDATE CAR ------------------------------////
+
 const updateCar = async (carIdNum) => {
 
     // Get cars list and find out current car by matching its id with carId in order
@@ -892,6 +977,8 @@ const updateCar = async (carIdNum) => {
     });
 }
 
+////--------------------------------- DELETE CAR ------------------------------////
+
 // Function for checking if car to be deleted is in actual orders
 const prepareDeleteCar = async (carIdNum) => {
 
@@ -915,6 +1002,7 @@ const prepareDeleteCar = async (carIdNum) => {
     const orders = await getOrdersList(); // Get orders to loop through
 
     const urlPath = "/updateorder";
+
     if (otherCarsByThisType.length > 0) { // If at least 1 substitute car is found
 
         // Loop through orders and assign/update with substitute car id
@@ -956,8 +1044,7 @@ const prepareDeleteCar = async (carIdNum) => {
         $("#danger-div").html(
             '<strong>WARNING:<br></strong>' +
             ' You are about to delete car ' + carToBeDeleted.regNr + ' with id ' + carIdNum + '.<br>' +
-            'Any order of this car will given a substitute car of same type.<br>' +
-            'Confirm or cancel in the confirmation box.<br>'
+            'If you proceed, any order of this car will be given a substitute car of same type.<br>'
         );
 
         // Give warning message time to load, before calling deleteCar() where a confirmation box is displayed
@@ -997,8 +1084,7 @@ const prepareDeleteCar = async (carIdNum) => {
         $("#danger-div").html(
             '<strong>WARNING:<br></strong>' +
             ' You are about to delete car ' + carToBeDeleted.regNr + ' with id ' + carIdNum + '.<br>' +
-            'There are no substitute cars of same type. If you proceed, any order of this car will be canceled.<br>' +
-            'Confirm or cancel in the confirmation box.<br>'
+            'There are no substitute cars of same type.<br>If you proceed, any order containing this car will therefore be canceled.<br>'
         );
 
         // Give warning message time to load, before calling deleteCar() where a confirmation box is displayed
@@ -1010,7 +1096,7 @@ const prepareDeleteCar = async (carIdNum) => {
 
 }
 
-// Delete car after handled current orders etc 
+// Delete car after handled current orders with car etc, in prepareDeleteCar()
 const deleteCar = async (carIdNum) => {
     var conf = confirm("WARNING: Confirm deletion of car with id " + carIdNum + "?");
 
@@ -1044,7 +1130,203 @@ const deleteCar = async (carIdNum) => {
     }
 }
 
+// PUT FETCH for canceling order
+const cancelOrder = async (orderIdNum) => {
+    // Retrieve pertinent order, get customer id, and find current customer
+    const orders = await getOrdersList();
+    var currentCustomerId;
+    var currentOrder1;
+    for (var i = 0; i < orders.length; i++) {
+        if (orders[i].id == orderIdNum) {
+            currentOrder1 = orders[i];
+            currentCustomerId = orders[i].customerId;
+        }
+    }
+    // for (var i = 0; i < customers.length; i++) {
+    //     if (customers[i].id == currentCustomerId) {
+    //         currentCustomer = customers[i];
+    //     }
+    // }
 
+    const urlPath = "/cancelorder";
+    const options = {
+        method: "PUT",
+        headers: {
+            Authorization: 'Bearer ' + keycloak.token,
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+        },
+        body: JSON.stringify({
+            id: orderIdNum,
+            orderNr: currentOrder1.orderNr,
+        }),
+    };
+    await fetch(apiBaseUrl + urlPath, options)
+        .then((response) => {
+            response.json()
+            // Needed response scope
+            // if (response.status == 500) {
+            //     alert("Order with id " + orderIdNum + " already canceled.");
+            // } else {
+            //     alert("Order with id " + orderIdNum + " have been canceled.");
+            // }
+        }
+        ).then((data) => { // Deleted/Canceled - no need to use returned data
+
+        }).catch((error) => {
+            console.log("Error: response not returned: ", error);
+        });
+
+    // Get the order again after cancel/update
+    // const updatedOrders = await getOrdersList();
+    // var currentOrder;
+    // for (var i = 0; i < updatedOrders.length; i++) {
+    //     if (updatedOrders[i].id == orderIdNum) {
+    //         currentOrder = updatedOrders[i];
+    //     }
+    // }
+
+    const customers = await getCustomersList();
+    var currentCustomer;
+    for (var i = 0; i < customers.length; i++) {
+        if (customers[i].id == currentCustomerId) {
+            currentCustomer = customers[i];
+        }
+    }
+
+    // Update same view after cancel data is updated
+    // $("#main-content").append('<div id="panel-div" class="sidepanel"></div>');
+
+    const panelHeader =
+        '<span class="closing-panel-x"><i class="fa-solid fa-xmark"></i></span>' +
+        '<h6>Orders by ' + currentCustomer.fName + ' ' + currentCustomer.lName +
+        ' with Ssn ' + currentCustomer.ssn + '</h6>';
+
+    const tableTop = '<table class="multiple-col-table" id="ordersTable">';
+
+    const tableHead = '<thead><tr><th>Order id</th><th>Canceled</th><th>Order Nr</th>' +
+        '<th>From</th><th>To</th><th>Car Id</th><th>Price</th></tr></thead>';
+
+    const tableBottom = '</table>' +
+        '<div><img src="https://thispersondoesnotexist.com/image" alt="Pic of customer"></div>';
+
+    let tableRows = '';
+    for (var i = 0; i < currentCustomer.ordersByCustomer.length; i++) {
+        const cancelUncancel = currentCustomer.ordersByCustomer[i].canceled ? "uncancel" : "cancel";
+
+        tableRows += '<tr><td>' + currentCustomer.ordersByCustomer[i].id + '</td><td>' +
+            // Change class to enable for next cancel/uncancel option
+
+            '<button class="' + cancelUncancel + '-order-btn btn btn-outline-success" id="order' +
+            currentCustomer.ordersByCustomer[i].id + '">' +
+            (currentCustomer.ordersByCustomer[i].canceled ? "Uncancel" : "Cancel") +
+            '</button></td><td>' +
+            currentCustomer.ordersByCustomer[i].orderNr + '</td><td>' +
+            currentCustomer.ordersByCustomer[i].firstRentalDay + '</td><td>' +
+            currentCustomer.ordersByCustomer[i].lastRentalDay + '</td><td>' +
+            currentCustomer.ordersByCustomer[i].carId + '</td><td>' +
+            currentCustomer.ordersByCustomer[i].price + '</td></tr>';
+    }
+
+    $("#panel-div").html(panelHeader + tableTop + tableHead + tableRows + tableBottom);
+}
+
+// PUT FETCH for UN-canceling order
+const uncancelOrder = async (orderIdNum) => {
+    // Retrieve pertinent order, get customer id, and find current customer
+    const orders = await getOrdersList();
+    var currentCustomerId;
+    var currentOrder1;
+    for (var i = 0; i < orders.length; i++) {
+        if (orders[i].id == orderIdNum) {
+            currentOrder1 = orders[i];
+            currentCustomerId = orders[i].customerId;
+        }
+    }
+    // for (var i = 0; i < customers.length; i++) {
+    //     if (customers[i].id == currentCustomerId) {
+    //         currentCustomer = customers[i];
+    //     }
+    // }
+
+    const urlPath = "/updateorder";
+    const options = {
+        method: "PUT",
+        headers: {
+            Authorization: 'Bearer ' + keycloak.token,
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+        },
+        body: JSON.stringify({
+            id: orderIdNum,
+            orderNr: currentOrder1.orderNr,
+            canceled: false,
+        }),
+    };
+    await fetch(apiBaseUrl + urlPath, options)
+        .then((response) => {
+            response.json()
+        }
+        ).then((data) => {
+
+        }).catch((error) => {
+            console.log("Error: response not returned: ", error);
+        });
+
+    // Get orders/customers again after cancel/update is done
+    // const updatedOrders = await getOrdersList();
+    // var currentOrder;
+    // for (var i = 0; i < updatedOrders.length; i++) {
+    //     if (updatedOrders[i].id == orderIdNum) {
+    //         currentOrder = updatedOrders[i];
+    //     }
+    // }
+
+    const customers = await getCustomersList();
+    var currentCustomer;
+    for (var i = 0; i < customers.length; i++) {
+        if (customers[i].id == currentCustomerId) {
+            currentCustomer = customers[i];
+        }
+    }
+
+
+    // Update same view after cancel data is updated
+    // $("#main-content").append('<div id="panel-div" class="sidepanel"></div>');
+
+    const panelHeader =
+        '<span class="closing-panel-x"><i class="fa-solid fa-xmark"></i></span>' +
+        '<h6>Orders by ' + currentCustomer.fName + ' ' + currentCustomer.lName +
+        ' with Ssn ' + currentCustomer.ssn + '</h6>';
+
+    const tableTop = '<table class="multiple-col-table" id="ordersTable">';
+
+    const tableHead = '<thead><tr><th>Order id</th><th>Canceled</th><th>Order Nr</th>' +
+        '<th>From</th><th>To</th><th>Car Id</th><th>Price</th></tr></thead>';
+
+    const tableBottom = '</table>' +
+        '<div><img src="https://thispersondoesnotexist.com/image" alt="Pic of customer"></div>';
+
+    let tableRows = '';
+    for (var i = 0; i < currentCustomer.ordersByCustomer.length; i++) {
+        const cancelUncancel = currentCustomer.ordersByCustomer[i].canceled ? "uncancel" : "cancel";
+
+        tableRows += '<tr><td>' + currentCustomer.ordersByCustomer[i].id + '</td><td>' +
+            // Change class to enable for next cancel/uncancel option
+
+            '<button class="' + cancelUncancel + '-order-btn btn btn-outline-success" id="order' +
+            currentCustomer.ordersByCustomer[i].id + '">' +
+            (currentCustomer.ordersByCustomer[i].canceled ? "Uncancel" : "Cancel") +
+            '</button></td><td>' +
+            currentCustomer.ordersByCustomer[i].orderNr + '</td><td>' +
+            currentCustomer.ordersByCustomer[i].firstRentalDay + '</td><td>' +
+            currentCustomer.ordersByCustomer[i].lastRentalDay + '</td><td>' +
+            currentCustomer.ordersByCustomer[i].carId + '</td><td>' +
+            currentCustomer.ordersByCustomer[i].price + '</td></tr>';
+    }
+
+    $("#panel-div").html(panelHeader + tableTop + tableHead + tableRows + tableBottom);
+}
 
 ////------ FUNCTIONS FOR RETRIEVING CUSTOMERS & CARS FROM BACKEND REST API -------////
 
@@ -1096,8 +1378,6 @@ const getCarsList = async () => {
     return cars;
 }
 
-
-
 // Takes in car type arg and returns list of cars for that type
 const getCarsByType = async (type) => {
     const allCars = await getCarsList();
@@ -1133,8 +1413,3 @@ const getOrdersList = async () => {
 
     return orders;
 }
-
-
-
-
-

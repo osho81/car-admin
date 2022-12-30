@@ -49,6 +49,22 @@ body {
     margin-left: 5%;
 }
 
+/* Hide certain columns when expanded is not clicked */
+.customers-table-mini td:nth-child(2),
+.customers-table-mini th:nth-child(2),
+.customers-table-mini td:nth-child(3),
+.customers-table-mini th:nth-child(3),
+.customers-table-mini td:nth-child(7),
+.customers-table-mini th:nth-child(7) {
+    display: none;
+}
+
+.customers-table-mini {
+    width: 50%;
+    margin-left: 25%;
+}
+
+
 .few-col-table {
     width: 60%;
     border: 2px solid rgb(50, 50, 50);
@@ -197,6 +213,22 @@ select {
     display: inline-block;
 }
 
+.functional-btn {
+    background-color: rgb(135, 149, 249);
+    border: 4px solid rgb(50, 50, 50);
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: Poppins, sans-serif;
+    color: rgb(50, 50, 50);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 5px;
+    padding: 3px 7px;
+    /* width: 120px; */
+    text-align: center;
+    display: inline-block;
+}
+
 .update-car-btn,
 .delete-car-btn {
     margin: 0 10% 0 0;
@@ -208,6 +240,22 @@ select {
     font-size: 12px;
     font-weight: 800;
     width: 80%;
+}
+
+.cancel-order-btn,
+.uncancel-order-btn {
+    font-size: 10px;
+    padding: 0;
+    font-weight: 800;
+    width: 100%;
+}
+
+.cancel-order-btn {
+    background-color: rgb(249, 114, 114);
+}
+
+.uncancel-order-btn {
+    background-color: rgb(208, 249, 224);
 }
 
 footer {
@@ -241,11 +289,6 @@ footer p {
 .carousel-control-next-icon {
     background-color: rgb(241, 237, 237) !important;
 }
-
-
-
-
-
 
 /* Following the Bootstrap 5 breakpoints: 
 https://getbootstrap.com/docs/5.0/layout/breakpoints/ */
@@ -300,6 +343,13 @@ https://getbootstrap.com/docs/5.0/layout/breakpoints/ */
         font-size: 10px;
         font-weight: 600;
     }
+
+    .cancel-order-btn,
+    .uncancel-order-btn {
+        font-size: 9px;
+        font-weight: 5800;
+    }
+
 
     .sidepanel {
         width: 60%;
@@ -381,7 +431,6 @@ https://getbootstrap.com/docs/5.0/layout/breakpoints/ */
         border: 1px solid rgb(50, 50, 50);
     }
 
-
     .multiple-btn-div button {
         margin: 1%;
         width: 40px;
@@ -401,11 +450,18 @@ https://getbootstrap.com/docs/5.0/layout/breakpoints/ */
     .sidepanel h6 {
         font-size: 10px !important;
     }
-    
+
     .alert {
         font-size: 14px;
         padding: 10%;
     }
+
+    .cancel-order-btn,
+    .uncancel-order-btn {
+        font-size: 8px;
+        font-weight: 4800;
+    }
+
 
     footer {
         margin-left: 0;
