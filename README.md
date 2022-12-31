@@ -8,6 +8,9 @@ car-rental-v2 is mainly a rest api project built on Java/SpringBoot. This admin-
 -  [admin-web (this frontend js project)](https://gitlab.com/car-rental-fullstack/admin-web)
 -  [customer-web (corresponding webpage for customers)](https://gitlab.com/car-rental-fullstack/customer-web)
 
+##### Corporate styleguide used for these projects:
+-  [TW Styleguide](https://gitlab.com/car-rental-fullstack/tw-styleguide)
+
 ### Description of related rest api project
 The backend project car-rental-v2 provides api for the following requests alloweed for ADMINS:
 - List customers; GET /api/v1/customers

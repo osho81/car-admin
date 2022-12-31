@@ -2,7 +2,6 @@
 const apiBaseUrl = "http://localhost:9090/api/v1";
 
 // Method for checking token lifespan and updates token if needed
-// Placed in home btn as a minimal basis (although can integrate into each fetch)
 keycloak.onTokenExpired = () => {
     console.log('token expired', keycloak.token);
     keycloak.updateToken(50).success(() => {
@@ -68,12 +67,6 @@ $(document).ready(function () {
 
     // Add eventlistener + function for expanding columns for customers view
     $(document).on("click", ".maximize-customer-btn", function () {
-        // Change class to use pertinent css styles
-        // $("#customersTable").removeAttr('class');
-        // $("#customersTable").attr('class', 'customers-table-maxi').attr('class', 'multiple-col-table'); 
-        // Change button properties to prepare for enable click function
-        // $("#expand-btn-id").removeAttr('class', 'maximize-customer-btn'); 
-        // $("#expand-btn-id").attr('class','minimize-customer-btn ').attr('class', 'functional-btn');
         $("#customersTable").removeClass();
         $("#customersTable").addClass("customers-table-maxi multiple-col-table"); // Replace pertinent classes
         $("#expand-btn-id").removeClass();
@@ -83,11 +76,6 @@ $(document).ready(function () {
 
     // For mimnimizing customers table, do opposite code of maximizing function above
     $(document).on("click", ".minimize-customer-btn", function () {
-        // console.log("hiii");
-        // $("#customersTable").removeAttr('class'); 
-        // $("#customersTable").attr('class', 'customers-table-mini').attr('class', 'multiple-col-table'); 
-        // $("#expand-btn-id").removeAttr('class', 'minimize-customer-btn').attr('class', 'multiple-col-table'); 
-        // $("#expand-btn-id").attr('class', 'functional-btn').attr('class', 'maximize-customer-btn');
         $("#customersTable").removeClass();
         $("#customersTable").addClass("customers-table-mini multiple-col-table");
         $("#expand-btn-id").removeClass();
@@ -674,7 +662,9 @@ function loadAdminInfo() {
 
 function signout() {
     keycloak.logout({ "redirectUri": "http://127.0.0.1:5500" }); // Back to login page
-    // keycloak.logout({"redirectUri":"http://localhost:8080/"}); // Back to keycloak admin console
+    // Use this if certain port is set in settings.json:
+    // keycloak.logout({ "redirectUri": "http://127.0.0.1:5501" }); 
+    // keycloak.logout({"redirectUri":"http://localhost:8080/"}); // Default keycloak admin console
 }
 
 ////--------------- DISPLAY CUSTOMERS ------------------////
@@ -1391,7 +1381,7 @@ const getCarsByType = async (type) => {
     return cars;
 }
 
-// Get all orders from backend and RETURN result
+// Get all orders from backend and RETURN result; assit other functions only
 const getOrdersList = async () => {
     const urlPath = "/orders";
     const options = {
