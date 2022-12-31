@@ -16,7 +16,7 @@ The backend project car-rental-v2 provides api for the following requests allowe
 - Update a rental car; PUT /api/v1/updatecar
 - Cancel order; PUT /api/v1/cancelorder
 
-#### Using rest api from admin-web 
+#### Functions in admin-web 
 The admin-web allows the signed in admin to retrieve records from the database, via the rest api. Admin can thus by click fucntions display a list of cars, list of customers, view a customer's orders, and sort and filter records alphabetically or by numbers. The admin can also add, update or delete a car. 
 
 ### Login and security 
@@ -25,8 +25,8 @@ For login and access management, [Keycloak (Quarkus distribution)](https://www.k
 - Client id: car-rental-v2
 - Valid post logout redirect URIs: 
     - http://localhost:9090/api/v1/* 
-    - http://127.0.0.1:5501/* 
-    - http://127.0.0.1:5500/*
+    - http://127.0.0.1:5500/* 
+    - http://127.0.0.1:5501/*
     - During development * as uri and web origin uri is sufficient. 
 - Roles: admin & user
 
