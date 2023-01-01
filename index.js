@@ -518,11 +518,8 @@ $(document).ready(function () {
                 '<button class="negative-btn delete-car-btn" id="car' + cars[i].id +
                 '">Delete</button>' + '</td></tr>';
         }
-        // const tableTop = '<table class="multiple-col-table" id="carsTable">';
-        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
-            "customers-table-maxi";
-        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
-            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
+        const tableTop = '<table class="multiple-col-table" id="carsTable">';
 
         const tableHead = '<thead><tr><th class="' + currentSortClass + '"># <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
             '</th><th class="sortByAlphabet sortFromA">Reg. Nr <i class="fa-solid fa-sort-down"></i></th><th>Model</th><th>Type' +
@@ -557,11 +554,8 @@ $(document).ready(function () {
                 '<button class="negative-btn delete-car-btn" id="car' + cars[i].id +
                 '">Delete</button>' + '</td></tr>';
         }
-        // const tableTop = '<table class="multiple-col-table" id="carsTable">';
-        const currentExpansion = $("#customersTable").hasClass("customers-table-mini") ? "customers-table-mini" :
-            "customers-table-maxi";
-        const tableTop = '<table class="multiple-col-table ' + currentExpansion + '" id="customersTable"><br>' +
-            '<button class="functional-btn maximize-customer-btn" id="expand-btn-id"><i class="fa-solid fa-maximize"></i></button><br><br>';
+
+        const tableTop = '<table class="multiple-col-table" id="carsTable">';
 
         const tableHead = '<thead><tr><th class="sortByNumber sortByAsc"># <i class="fa-solid fa-sort-down"></i>' +
             '</th><th class="' + currentSortClass + '">Reg. Nr <i class="fa-solid fa-sort-' + upOrDown + '"></i>' +
