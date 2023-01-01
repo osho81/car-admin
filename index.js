@@ -893,8 +893,12 @@ const addCar = async () => {
 
         // Send post request to backend rest api
         await fetch(apiBaseUrl + urlPath, options)
-            .then((response) => response.json())
-            .then((data) => {
+            .then((response) => {
+                response.json();
+                if (!response.ok) {
+                    alert("You have no rights for this action");
+                }
+            }).then((data) => {
                 var cars = data;
 
             }).catch((error) => {
@@ -1112,8 +1116,12 @@ const deleteCar = async (carIdNum) => {
             }),
         };
         await fetch(apiBaseUrl + urlPath, options)
-            .then((response) => response.json()) // Promise
-            .then((data) => {
+            .then((response) => {
+                response.json(); // Promise
+                if (!response.ok) {
+                    alert("You have no rights for this action");
+                }
+            }).then((data) => {
                 cars = data;
 
             }).catch((error) => {
