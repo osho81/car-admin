@@ -1,0 +1,4 @@
+{
+    // Default is 5050 
+    "liveServer.settings.port": 5500
+}

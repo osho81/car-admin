@@ -1,6 +1,6 @@
 body {
     /* The css !important rule overrides bootstrap defaults */
-    background-color: rgb(241, 237, 237) !important;
+    background-color: rgb(219, 213, 213) !important;
 }
 
 .navbar {
@@ -18,7 +18,6 @@ body {
 }
 
 .navbar-nav li {
-    /* margin-left: 10%; */
     width: 200px;
 }
 
@@ -224,7 +223,6 @@ select {
     font-weight: 600;
     margin: 5px;
     padding: 3px 7px;
-    /* width: 120px; */
     text-align: center;
     display: inline-block;
 }
@@ -282,7 +280,6 @@ footer p {
 #carouselExampleInterval img {
     width: 70% !important;
     margin: 5% auto auto 15%;
-
 }
 
 .carousel-control-prev-icon,
@@ -313,9 +310,6 @@ https://getbootstrap.com/docs/5.0/layout/breakpoints/ */
     }
 
     #main-content {
-        /* margin-top: 0;
-        margin-left: 0; */
-        /* width: 100%; */
         padding: 2% 2%;
     }
 
@@ -350,7 +344,6 @@ https://getbootstrap.com/docs/5.0/layout/breakpoints/ */
         font-weight: 5800;
     }
 
-
     .sidepanel {
         width: 60%;
     }
@@ -366,7 +359,6 @@ https://getbootstrap.com/docs/5.0/layout/breakpoints/ */
     }
 
 }
-
 
 @media screen and (max-width: 576px) {
 
@@ -412,10 +404,8 @@ https://getbootstrap.com/docs/5.0/layout/breakpoints/ */
     }
 
     #main-content {
-        /* margin-top: 0; */
         margin: 0;
         width: 100%;
-        /* padding: 2% 2%; */
     }
 
     .multiple-col-table {
@@ -461,7 +451,6 @@ https://getbootstrap.com/docs/5.0/layout/breakpoints/ */
         font-size: 8px;
         font-weight: 4800;
     }
-
 
     footer {
         margin-left: 0;

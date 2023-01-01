@@ -22,14 +22,14 @@ The backend project car-rental-v2 provides api for the following requests allowe
 #### Functions in admin-web 
 The admin-web allows the signed in admin to retrieve records from the database, via the rest api. Admin can thus by click fucntions display a list of cars, list of customers, view a customer's orders, and sort and filter records alphabetically or by numbers. The admin can also add, update or delete a car. 
 
-### Login and security 
-For login and access management, [Keycloak (Quarkus distribution)](https://www.keycloak.org/downloads) is employed. For the frontend, i.e. this admin-web, a Javascript adapter form the same source have been included in the project. Brief configuration description: 
+### Login and security for the fullstack project
+For login and access management, [Keycloak (Quarkus distribution)](https://www.keycloak.org/downloads) is employed. For the frontend, i.e. this admin-web, a Javascript adapter from the same source have been included in the project. Brief configuration description: 
 - Realm name: car-rental-realm
 - Client id: car-rental-v2
-- Valid post logout redirect URIs: 
+- Valid post logout redirect URIs, relevant for e.g. VS Code live server: 
     - http://localhost:9090/api/v1/* 
     - http://127.0.0.1:5500/* 
-    - http://127.0.0.1:5501/*
+    - http://127.0.0.1:5501/* (in case use customer & admin web simultanous)
     - During development * as uri and web origin uri is sufficient. 
 - Roles: admin & user
 

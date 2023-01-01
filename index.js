@@ -37,13 +37,52 @@ $(document).ready(function () {
     });
 
     // Add eventlistener for delete car btn
-    $(document).on("click", ".delete-car-btn", function () {
+    $(document).on("click", ".delete-car-btn", async function () {
         var btn = this; // Extract id
         let carId = btn.id.slice(3); // remove "car" from id
         let carIdNum = Number(carId); // Cast to number/int
 
-        // Check conditions for deletion of car and possibla relacement of car for pertinent orders
-        prepareDeleteCar(carIdNum);
+        // Get cars list and find out current car by matching its id with carId in order
+        const cars = await getCarsList();
+        for (var i = 0; i < cars.length; i++) {
+            var carToBeDeleted;
+            if (cars[i].id == carIdNum) {
+                carToBeDeleted = cars[i];
+            }
+        }
+
+
+        // FInd a substitute car with same type
+        const carsByThisType = await getCarsByType(carToBeDeleted.type.toUpperCase());
+
+        // Exclude car being deleted, to not re-assign it to orders
+        const otherCarsByThisType = carsByThisType.filter(car => car.id != carToBeDeleted.id);
+
+        // Delete-warning message
+        // Message depends on if there are substitute cars of same type or not
+        if (otherCarsByThisType.length > 0) { // If there is substitution car
+            $("#main-content").append('<div id="danger-div" class="alert danger"></div>');
+            $("#danger-div").html(
+                '<strong>WARNING:<br></strong>' +
+                ' You are about to delete car ' + carToBeDeleted.regNr + ' with id ' + carIdNum + '.<br>' +
+                'If you proceed, any order of this car will be given a substitute car of same type.<br>'
+            );
+
+        } else { // If no substitution car 
+            $("#main-content").append('<div id="danger-div" class="alert danger"></div>');
+            $("#danger-div").html(
+                '<strong>WARNING:<br></strong>' +
+                ' You are about to delete car ' + carToBeDeleted.regNr + ' with id ' + carIdNum + '.<br>' +
+                'There are no substitute cars of same type.<br>If you proceed, any order containing this car will therefore be canceled.<br>'
+            );
+        }
+
+        // Give warning message time to load, before calling deleteCar() where a confirmation box is displayed
+        var millisecondsToWait = 500;
+        setTimeout(function () {
+            prepareDeleteCar(carIdNum);
+        }, millisecondsToWait);
+
 
     });
 
@@ -534,13 +573,12 @@ $(document).ready(function () {
 
     ////----------------- SIDE PANEL FOR ORDERS --------------------////
 
-    // Add eventlistener + function for orders preview for admin after click on custoemr order column
+    // Add eventlistener + function for orders preview for admin after click on customer order column
     $(document).on("click", ".customer-orders-btn", async function () {
 
         var btn = this;
         let customerId = btn.id.slice(8);
         let customerIdNum = Number(customerId);
-        console.log(customerIdNum);
 
         // Get current car in order to show details for that car
         const customers = await getCustomersList();
@@ -569,11 +607,16 @@ $(document).ready(function () {
 
         let tableRows = '';
         for (var i = 0; i < currentCustomer.ordersByCustomer.length; i++) {
+            const cancelUncancel = currentCustomer.ordersByCustomer[i].canceled ? "uncancel" : "cancel";
+
             tableRows += '<tr><td>' + currentCustomer.ordersByCustomer[i].id + '</td><td>' +
                 // currentCustomer.ordersByCustomer[i].canceled + '</td><td>' +
 
                 // Add btn so admin can cancel an order
-                '<button class="cancel-order-btn btn btn-outline-success" id="order' + currentCustomer.ordersByCustomer[i].id + '">' +
+                '<button class="' + cancelUncancel + '-order-btn btn btn-outline-success" id="order' +
+                currentCustomer.ordersByCustomer[i].id + '">' +
+                // '<button class="cancel-order-btn btn btn-outline-success" id="order' + 
+                // currentCustomer.ordersByCustomer[i].id + '">' +
                 (currentCustomer.ordersByCustomer[i].canceled ? "Uncancel" : "Cancel") +
                 '</button></td><td>' +
 
@@ -605,15 +648,6 @@ $(document).ready(function () {
 /////--------- HOME, ADMIN INFO, LOGOUT fucntions ------------/////
 
 function loadHomeContent() {
-
-    // Method for checking token lifespan and updates token if needed
-    // Placed in home btn as a minimal basis (although can integrate into each fetch)
-    keycloak.onTokenExpired = () => {
-        console.log('token expired', keycloak.token);
-        keycloak.updateToken(50).success(() => {
-            console.log('successfully get a new token', keycloak.token);
-        }).error(() => { "Error: failed token update: ", error });
-    }
 
     $("#main-content").html(
         '<h3>TW Car Rental Admin Web</h3>' +
@@ -661,9 +695,12 @@ function loadAdminInfo() {
 
 
 function signout() {
-    keycloak.logout({ "redirectUri": "http://127.0.0.1:5500" }); // Back to login page
-    // Use this if certain port is set in settings.json:
-    // keycloak.logout({ "redirectUri": "http://127.0.0.1:5501" }); 
+    // Use this for default VS code jj browser/client 
+    keycloak.logout({ "redirectUri": "http://127.0.0.1:5500" });
+
+    // Use this if certain port is set in settings.json (Currently used for custoemr web 221231:)
+    // keycloak.logout({ "redirectUri": "http://127.0.0.1:5501" });
+
     // keycloak.logout({"redirectUri":"http://localhost:8080/"}); // Default keycloak admin console
 }
 
@@ -969,7 +1006,7 @@ const updateCar = async (carIdNum) => {
 
 ////--------------------------------- DELETE CAR ------------------------------////
 
-// Function for checking if car to be deleted is in actual orders
+// Function for handle substitutuin cars if car to be deleted is in other orders
 const prepareDeleteCar = async (carIdNum) => {
 
     // Get cars list and find out current car by matching its id with carId in order
@@ -980,8 +1017,6 @@ const prepareDeleteCar = async (carIdNum) => {
             carToBeDeleted = cars[i];
         }
     }
-    console.log("Car id-arg " + carIdNum);
-    console.log("Car id " + carToBeDeleted.id);
 
     // FInd a substitute car with same type
     const carsByThisType = await getCarsByType(carToBeDeleted.type.toUpperCase());
@@ -1028,20 +1063,7 @@ const prepareDeleteCar = async (carIdNum) => {
                     });
             }
         }
-
-        // Delete warning message
-        $("#main-content").append('<div id="danger-div" class="alert danger"></div>');
-        $("#danger-div").html(
-            '<strong>WARNING:<br></strong>' +
-            ' You are about to delete car ' + carToBeDeleted.regNr + ' with id ' + carIdNum + '.<br>' +
-            'If you proceed, any order of this car will be given a substitute car of same type.<br>'
-        );
-
-        // Give warning message time to load, before calling deleteCar() where a confirmation box is displayed
-        var millisecondsToWait = 500;
-        setTimeout(function () {
-            deleteCar(carIdNum);
-        }, millisecondsToWait);
+        deleteCar(carIdNum);
 
     } else { // If NO substitute car of same type is found, cancel any order with deleted car
         for (var i = 0; i < orders.length; i++) {
@@ -1068,20 +1090,7 @@ const prepareDeleteCar = async (carIdNum) => {
                     });
             }
         }
-
-        // Delete warning message
-        $("#main-content").append('<div id="danger-div" class="alert danger"></div>');
-        $("#danger-div").html(
-            '<strong>WARNING:<br></strong>' +
-            ' You are about to delete car ' + carToBeDeleted.regNr + ' with id ' + carIdNum + '.<br>' +
-            'There are no substitute cars of same type.<br>If you proceed, any order containing this car will therefore be canceled.<br>'
-        );
-
-        // Give warning message time to load, before calling deleteCar() where a confirmation box is displayed
-        var millisecondsToWait = 500;
-        setTimeout(function () {
-            deleteCar(carIdNum);
-        }, millisecondsToWait);
+        deleteCar(carIdNum);
     }
 
 }
@@ -1132,11 +1141,6 @@ const cancelOrder = async (orderIdNum) => {
             currentCustomerId = orders[i].customerId;
         }
     }
-    // for (var i = 0; i < customers.length; i++) {
-    //     if (customers[i].id == currentCustomerId) {
-    //         currentCustomer = customers[i];
-    //     }
-    // }
 
     const urlPath = "/cancelorder";
     const options = {
@@ -1149,32 +1153,15 @@ const cancelOrder = async (orderIdNum) => {
         body: JSON.stringify({
             id: orderIdNum,
             orderNr: currentOrder1.orderNr,
+            price: currentOrder1.price,
         }),
     };
     await fetch(apiBaseUrl + urlPath, options)
-        .then((response) => {
-            response.json()
-            // Needed response scope
-            // if (response.status == 500) {
-            //     alert("Order with id " + orderIdNum + " already canceled.");
-            // } else {
-            //     alert("Order with id " + orderIdNum + " have been canceled.");
-            // }
-        }
-        ).then((data) => { // Deleted/Canceled - no need to use returned data
-
+        .then((response) => response.json())
+        .then((data) => { // Deleted/Canceled - no need to use returned data
         }).catch((error) => {
             console.log("Error: response not returned: ", error);
         });
-
-    // Get the order again after cancel/update
-    // const updatedOrders = await getOrdersList();
-    // var currentOrder;
-    // for (var i = 0; i < updatedOrders.length; i++) {
-    //     if (updatedOrders[i].id == orderIdNum) {
-    //         currentOrder = updatedOrders[i];
-    //     }
-    // }
 
     const customers = await getCustomersList();
     var currentCustomer;
@@ -1183,9 +1170,6 @@ const cancelOrder = async (orderIdNum) => {
             currentCustomer = customers[i];
         }
     }
-
-    // Update same view after cancel data is updated
-    // $("#main-content").append('<div id="panel-div" class="sidepanel"></div>');
 
     const panelHeader =
         '<span class="closing-panel-x"><i class="fa-solid fa-xmark"></i></span>' +
@@ -1209,7 +1193,8 @@ const cancelOrder = async (orderIdNum) => {
 
             '<button class="' + cancelUncancel + '-order-btn btn btn-outline-success" id="order' +
             currentCustomer.ordersByCustomer[i].id + '">' +
-            (currentCustomer.ordersByCustomer[i].canceled ? "Uncancel" : "Cancel") +
+            cancelUncancel +
+            // (currentCustomer.ordersByCustomer[i].canceled ? "Uncancel" : "Cancel") +
             '</button></td><td>' +
             currentCustomer.ordersByCustomer[i].orderNr + '</td><td>' +
             currentCustomer.ordersByCustomer[i].firstRentalDay + '</td><td>' +
@@ -1233,11 +1218,6 @@ const uncancelOrder = async (orderIdNum) => {
             currentCustomerId = orders[i].customerId;
         }
     }
-    // for (var i = 0; i < customers.length; i++) {
-    //     if (customers[i].id == currentCustomerId) {
-    //         currentCustomer = customers[i];
-    //     }
-    // }
 
     const urlPath = "/updateorder";
     const options = {
@@ -1251,6 +1231,10 @@ const uncancelOrder = async (orderIdNum) => {
             id: orderIdNum,
             orderNr: currentOrder1.orderNr,
             canceled: false,
+
+            // Backend also endpoint api requires the start/end dates to calculate price:
+            firstRentalDay: currentOrder1.firstRentalDay,
+            lastRentalDay: currentOrder1.lastRentalDay,
         }),
     };
     await fetch(apiBaseUrl + urlPath, options)
@@ -1263,14 +1247,6 @@ const uncancelOrder = async (orderIdNum) => {
             console.log("Error: response not returned: ", error);
         });
 
-    // Get orders/customers again after cancel/update is done
-    // const updatedOrders = await getOrdersList();
-    // var currentOrder;
-    // for (var i = 0; i < updatedOrders.length; i++) {
-    //     if (updatedOrders[i].id == orderIdNum) {
-    //         currentOrder = updatedOrders[i];
-    //     }
-    // }
 
     const customers = await getCustomersList();
     var currentCustomer;
@@ -1279,10 +1255,6 @@ const uncancelOrder = async (orderIdNum) => {
             currentCustomer = customers[i];
         }
     }
-
-
-    // Update same view after cancel data is updated
-    // $("#main-content").append('<div id="panel-div" class="sidepanel"></div>');
 
     const panelHeader =
         '<span class="closing-panel-x"><i class="fa-solid fa-xmark"></i></span>' +
@@ -1306,7 +1278,8 @@ const uncancelOrder = async (orderIdNum) => {
 
             '<button class="' + cancelUncancel + '-order-btn btn btn-outline-success" id="order' +
             currentCustomer.ordersByCustomer[i].id + '">' +
-            (currentCustomer.ordersByCustomer[i].canceled ? "Uncancel" : "Cancel") +
+            cancelUncancel +
+            // (currentCustomer.ordersByCustomer[i].canceled ? "Uncancel" : "Cancel") +
             '</button></td><td>' +
             currentCustomer.ordersByCustomer[i].orderNr + '</td><td>' +
             currentCustomer.ordersByCustomer[i].firstRentalDay + '</td><td>' +
@@ -1335,7 +1308,6 @@ const getCustomersList = async () => {
         .then((response) => response.json())
         .then((data) => {
             customers = data; // Store data to return
-            console.log(customers);
 
         }).catch((error) => {
             console.log("Error: response not returned: ", error);
