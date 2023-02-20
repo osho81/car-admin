@@ -1078,7 +1078,7 @@ const prepareDeleteCar = async (carIdNum) => {
                     body: JSON.stringify({
                         id: orders[i].id,
                         orderNr: orders[i].orderNr,
-                        canceled: true, // CAncel, since carId will be zero
+                        canceled: true, // Cancel, since carId will be zero
                     }),
                 };
                 await fetch(apiBaseUrl + urlPath, options)
