@@ -597,9 +597,9 @@ $(document).ready(function () {
 
         const tableBottom = '</table>' +
             '<div><img src="https://thispersondoesnotexist.com/image" alt="Pic of customer"></div>';
+            // '<div><img src="https://fakeface.rest/face/view" alt="Pic of customer"></div>';
 
-
-        let tableRows = '';
+            let tableRows = '';
         for (var i = 0; i < currentCustomer.ordersByCustomer.length; i++) {
             const cancelUncancel = currentCustomer.ordersByCustomer[i].canceled ? "uncancel" : "cancel";
 
@@ -1321,6 +1321,7 @@ const getCustomersList = async () => {
 
 // Get all cars from backend and RETURN results
 const getCarsList = async () => {
+    console.log(keycloak.token);
     const urlPath = "/cars";
     const options = {
         method: "GET",
